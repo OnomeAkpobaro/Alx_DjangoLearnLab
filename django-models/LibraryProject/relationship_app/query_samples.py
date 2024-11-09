@@ -16,31 +16,24 @@ def books_by_author(author_name):
 
 def book_in_library(library_name):
     #Get the library object using filter to avoid exceptions
-    library = Library.objects.filter(name=library_name).first()
-
-    if library:
+    library = Library.objects.filter(name=library_name)
         #filter books associated with the library
-        books = Book.objects.filter(library=library)        #filter books by the library
+    books = library.books.all()       #filter books by the library
 
-        for book in books:
+    for book in books:
             print(book.title)
 
-    else:
-        print(f"No library found with name {library_name}")
 
 def librarian_for_library(library_name):
     #Get the library object using filter to avoid exceptions
     library = Library.objects.filter(name=library_name).first()
 
-    if library:
-        #Get the librarian using filter to avoid exceptions
-        librarian = Librarian.objects.filter(library=library).first()
 
-        if librarian:
+        #Get the librarian using filter to avoid exceptions
+    librarian = Librarian.objects.get(library='')
+
+    if librarian:
             print(f"The librarian for {library.name} is {librarian.name}")
 
-        else:
-            print(f"No librarian found for {library_name}")
-
     else:
-        print(f"No library found with {library_name}")
+            print(f"No librarian found for {library_name}")
