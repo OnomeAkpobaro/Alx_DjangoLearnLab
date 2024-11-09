@@ -16,7 +16,7 @@ def books_by_author(author_name):
 
 def book_in_library(library_name):
     #Get the library object using filter to avoid exceptions
-    library = Library.objects.filter(name=library_name)
+    library = Library.objects.get(name=library_name)
         #filter books associated with the library
     books = library.books.all()       #filter books by the library
 
@@ -26,7 +26,7 @@ def book_in_library(library_name):
 
 def librarian_for_library(library_name):
     #Get the library object using filter to avoid exceptions
-    library = Library.objects.filter(name=library_name).first()
+    library = Library.objects.get(name=library_name)
 
 
         #Get the librarian using filter to avoid exceptions
