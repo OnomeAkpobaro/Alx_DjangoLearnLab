@@ -3,7 +3,7 @@ from relationship_app.models import Author, Book, Library, Librarian
 
 def books_by_author(author_name):
     #Get the author name using filter to avoid raising an exception if not found
-    author = Author.objects.filter(name=author_name).first()        #returns None if no match is found
+    author = Author.objects.get(name=author_name)       #returns None if no match is found
 
     if author:
             #use the reverse relation to get all books for the author
