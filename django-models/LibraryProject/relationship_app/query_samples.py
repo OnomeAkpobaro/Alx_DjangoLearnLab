@@ -17,6 +17,6 @@ def books_in_library(library_name):
 
     
 def librarian_for_library(library_name):
-    library = Library.objects.get(name=library_name)
+    library = Librarian.objects.get(library='')
     librarian = library.librarian
     print(f"The librarian for {library.name} is {librarian.name}")
