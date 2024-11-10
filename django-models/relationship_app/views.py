@@ -9,6 +9,8 @@ from django.contrib import messages
 from django.urls import reverse_lazy, path
 from django.views.generic import CreateView
 from django.contrib.auth import login
+from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import user_passes_test
 
 
 
@@ -33,4 +35,24 @@ class RegisterView(CreateView):
     form_class = UserCreationForm()
     success_url = reverse_lazy('login')
     template_name = 'relationship_app/register.html'
+
+#Fuction to check roles
+def role_required(role):
+    def decorator(view_func):
+        return user_passes_test(lambda u: u.userprofile.role == role)(view_func)
+    return decorator
+
+#Admin view - accissible to users with Admin role
+@role_required('Admin')
+def admin_view(request):
+    return render(request, 'admin_dashboard.html')
+
+#Librarian View - accessible to users with librarian role
+def librarian_view(request):
+    return render(request, 'librarian_dashboard.html')
+
+#Member role - accessible to users with member role
+@role_required('Member')
+def member_view(request):
+    return render(request, 'member_dashboard.html')
 
