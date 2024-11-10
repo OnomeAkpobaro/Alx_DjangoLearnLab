@@ -10,7 +10,7 @@ from django.urls import reverse_lazy, path
 from django.views.generic import CreateView
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, login_required
 
 
 
