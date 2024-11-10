@@ -43,15 +43,19 @@ def role_required(role):
     return decorator
 
 #Admin view - accissible to users with Admin role
+@login_required
 @role_required('Admin')
 def admin_view(request):
     return render(request, 'admin_dashboard.html')
 
 #Librarian View - accessible to users with librarian role
+@login_required
+@role_required('Librarian')
 def librarian_view(request):
     return render(request, 'librarian_dashboard.html')
 
 #Member role - accessible to users with member role
+@login_required
 @role_required('Member')
 def member_view(request):
     return render(request, 'member_dashboard.html')
