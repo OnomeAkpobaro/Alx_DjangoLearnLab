@@ -1,5 +1,5 @@
 from multiprocessing import context
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Author, Book, Library, Librarian
 from django.views.generic.detail import DetailView
 from .models import Library
@@ -10,8 +10,9 @@ from django.urls import reverse_lazy, path
 from django.views.generic import CreateView
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
 from django.http import HttpResponse
+
 
 
 
@@ -37,7 +38,10 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'relationship_app/register.html'
 
-
+class RoleView():
+    form_class = login_required()
+    success_url = reverse_lazy('login')
+    template_name = 'relationship_app/login.html'
 
 # Fuction to check roles
 # def role_required(role):
@@ -91,3 +95,30 @@ def librarian_view(request):
 @role_required('Member')
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+
+def add_book(request):
+    if request.method == "POST":
+        title = request.POST.get('title')
+        author = request.POST.get('author')
+        if title and author:
+            book = Book(
+                title=title,
+                author=author
+            )
+
+            book.save()
+            return redirect('book_list')
+        
+        else:
+            return HttpResponse("All fields are required.", status=404)
+    return render(request, 'add_book.html')
+
+def edit_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+
+    if request.method == "POST":
+        book.delete()
+        return redirect('book_list')
+    return render(request, 'delete_book.html', {'book': book})
+
