@@ -1,9 +1,14 @@
 from multiprocessing import context
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Author, Book, Library, Librarian
 from django.views.generic.detail import DetailView
 from .models import Library
-from .views import list_books, LibraryDetailView, path
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.urls import reverse_lazy, path
+from django.views.generic import CreateView
+
 
 
 # Create your views here.
@@ -22,4 +27,9 @@ class LibraryDetailView(DetailView):
     def get_context_data(self, **kwargs):
         return context
     
-    
+#Register views using Django's built-in Usercreationform
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'relationship_app/register.html'
+
