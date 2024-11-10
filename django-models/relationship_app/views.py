@@ -114,14 +114,23 @@ def add_book(request):
         
         else:
             return HttpResponse("All fields are required.", status=404)
-    return render(request, 'add_book.html')
+    return render(request, 'relationship_app/add_book.html')
 
 @permission_required('relationship_app.can_change_book', raise_exception=True)
 def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
 
     if request.method == "POST":
+        book.title = request.POST.get('title', book.title)
+        book.author = request.POST.get('author', book.author)
+
+        book.save()
+        return render(request, 'relationship_app/edit_book.html', {'book': book})
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == "POST":
         book.delete()
         return redirect('book_list')
-    return render(request, 'delete_book.html', {'book': book})
+    return render(request, 'relationship_app/delete_book.html', {'book': book})
 
