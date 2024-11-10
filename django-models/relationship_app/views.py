@@ -8,6 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.urls import reverse_lazy, path
 from django.views.generic import CreateView
+from django.contrib.auth import login
 
 
 
