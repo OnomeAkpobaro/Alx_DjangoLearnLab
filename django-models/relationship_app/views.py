@@ -10,8 +10,10 @@ from django.urls import reverse_lazy, path
 from django.views.generic import CreateView
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
-from django.contrib.auth.decorators import user_passes_test, login_required, permission_required
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.http import HttpResponse
+from django.contrib.auth.decorators import permission_required
+
 
 
 
@@ -96,7 +98,7 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
-
+@permission_required('relationship_app.can_add_book', raise_exception=True)
 def add_book(request):
     if request.method == "POST":
         title = request.POST.get('title')
@@ -114,6 +116,7 @@ def add_book(request):
             return HttpResponse("All fields are required.", status=404)
     return render(request, 'add_book.html')
 
+@permission_required('relationship_app.can_change_book', raise_exception=True)
 def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
 
