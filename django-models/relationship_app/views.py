@@ -11,6 +11,7 @@ from django.views.generic import CreateView
 from django.contrib.auth import login
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.http import HttpResponse
 
 
 
@@ -36,30 +37,57 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'relationship_app/register.html'
 
-#Fuction to check roles
+
+
+# Fuction to check roles
+# def role_required(role):
+#     def decorator(view_func):
+#         return user_passes_test(lambda u: u.userprofile.role == role)(view_func)
+#     return decorator
+
+# #Admin view - accissible to users with Admin role
+# @login_required(login_url='admin_views.html')
+# # @role_required('Admin')
+# @user_passes_test(admin_view)
+# def admin_view(request):
+#     return render(request, 'admin_view.html')
+
+# #Librarian View - accessible to users with librarian role
+# @login_required(login_url='librarian_view.html')
+# # @role_required('Librarian')
+# @user_passes_test(librarian_view)
+# def librarian_view(request):
+#     return render(request, 'librarian_view.html')
+
+# #Member role - accessible to users with member role
+# @login_required
+# @role_required('Member')
+# def member_view(request):
+#     return user_passes_test(request, 'member_view.html')
+#     # return render(request, 'member_view.html')
+
+from django.contrib.auth.decorators import user_passes_test
+
 def role_required(role):
     def decorator(view_func):
         return user_passes_test(lambda u: u.userprofile.role == role)(view_func)
     return decorator
 
-#Admin view - accissible to users with Admin role
-@login_required
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+@login_required(login_url='relationship_app/login.html')
 @role_required('Admin')
 def admin_view(request):
-    return user_passes_test(request,'admin_view.html')
-    # return render(request, 'admin_view.html')
+    return render(request, 'relationship_app/admin_view.html')
 
-#Librarian View - accessible to users with librarian role
-@login_required
+@login_required(login_url='relationship_app/login.html')
 @role_required('Librarian')
 def librarian_view(request):
-    return user_passes_test(request, 'librarian_view.html')
-    # return render(request, 'librarian_view.html')
+    return render(request, 'relationship_app/librarian_view.html')
 
-#Member role - accessible to users with member role
-@login_required
+@login_required(login_url='relationship_app/login.html')
 @role_required('Member')
 def member_view(request):
-    return user_passes_test(request, 'member_view.html')
-    # return render(request, 'member_view.html')
-
+    return render(request, 'relationship_app/member_view.html')
