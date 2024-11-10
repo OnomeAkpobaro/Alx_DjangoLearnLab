@@ -3,6 +3,7 @@ from django.shortcuts import render
 from .models import Author, Book, Library, Librarian
 from django.views.generic.detail import DetailView
 from .models import Library
+from .views import list_books, LibraryDetailView, path
 
 
 # Create your views here.
