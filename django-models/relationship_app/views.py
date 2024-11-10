@@ -46,17 +46,20 @@ def role_required(role):
 @login_required
 @role_required('Admin')
 def admin_view(request):
-    return render(request, 'admin_view.html')
+    return user_passes_test(request,'admin_view.html')
+    # return render(request, 'admin_view.html')
 
 #Librarian View - accessible to users with librarian role
 @login_required
 @role_required('Librarian')
 def librarian_view(request):
-    return render(request, 'librarian_view.html')
+    return user_passes_test(request, 'librarian_view.html')
+    # return render(request, 'librarian_view.html')
 
 #Member role - accessible to users with member role
 @login_required
 @role_required('Member')
 def member_view(request):
-    return render(request, 'member_view.html')
+    return user_passes_test(request, 'member_view.html')
+    # return render(request, 'member_view.html')
 
