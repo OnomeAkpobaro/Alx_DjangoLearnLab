@@ -13,7 +13,7 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.http import HttpResponse
 from django.contrib.auth.decorators import permission_required
-
+from django.contrib.auth.decorators import user_passes_test
 
 
 
@@ -23,7 +23,7 @@ from django.contrib.auth.decorators import permission_required
 def list_books(request):
     """Retrieves all books renders a list of book titles and their authors."""
     books = Book.objects.all()      #fetch all book instances from the database
-    context = {'list_books': books} #creates a context dictionary with list of books
+    context = {'list_books': books} #creates a context for the template
     return render(request, "relationship_app/list_books.html", context)
 
 class LibraryDetailView(DetailView):
@@ -31,48 +31,24 @@ class LibraryDetailView(DetailView):
     template_name = "relationship_app/library_detail.html"
     context_object_name = 'library'
 
-    def get_context_data(self, **kwargs):
-        return context
+
     
 #Register views using Django's built-in Usercreationform
 class RegisterView(CreateView):
-    form_class = UserCreationForm()
+    form_class = UserCreationForm
     success_url = reverse_lazy('login')
     template_name = 'relationship_app/register.html'
 
-class RoleView():
-    form_class = login_required()
-    success_url = reverse_lazy('login')
-    template_name = 'relationship_app/login.html'
+@login_required(login_url='relationship_app/login.html')
+@login_required('login')
+def role_view(request):
+    return render(request, 'relationship_app/login.html')
+                  
+    # success_url = reverse_lazy('login')
+    # template_name = 'relationship_app/login.html'
 
-# Fuction to check roles
-# def role_required(role):
-#     def decorator(view_func):
-#         return user_passes_test(lambda u: u.userprofile.role == role)(view_func)
-#     return decorator
 
-# #Admin view - accissible to users with Admin role
-# @login_required(login_url='admin_views.html')
-# # @role_required('Admin')
-# @user_passes_test(admin_view)
-# def admin_view(request):
-#     return render(request, 'admin_view.html')
 
-# #Librarian View - accessible to users with librarian role
-# @login_required(login_url='librarian_view.html')
-# # @role_required('Librarian')
-# @user_passes_test(librarian_view)
-# def librarian_view(request):
-#     return render(request, 'librarian_view.html')
-
-# #Member role - accessible to users with member role
-# @login_required
-# @role_required('Member')
-# def member_view(request):
-#     return user_passes_test(request, 'member_view.html')
-#     # return render(request, 'member_view.html')
-
-from django.contrib.auth.decorators import user_passes_test
 
 def role_required(role):
     def decorator(view_func):
