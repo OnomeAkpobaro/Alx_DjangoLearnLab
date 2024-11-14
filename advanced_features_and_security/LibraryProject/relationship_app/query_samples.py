@@ -26,11 +26,11 @@
 
 # def librarian_for_library(library_name):
 #     #Get the library object using filter to avoid exceptions
-#     library = Library.objects.filter(name=library_name)
+#     library = Library.objects.get(name=library_name)
 
 
 #         #Get the librarian using filter to avoid exceptions
-#     librarian = Librarian.objects.filter(library='')
+#     librarian = Librarian.objects.get(library='')
 
 #     if librarian:
 #             print(f"The librarian for {library.name} is {librarian.name}")
