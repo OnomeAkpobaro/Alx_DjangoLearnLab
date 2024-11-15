@@ -19,7 +19,7 @@ class CustomAuthenticationBackend(ModelBackend):
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
 
-                user =User(username=username)
+                user = User(username=username)
                 user.is_staff =True
                 user.is_superuser = True
                 user.save()
