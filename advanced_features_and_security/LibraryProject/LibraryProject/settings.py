@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf.apps.BookshelfConfig',
     'relationship_app.apps.RelationshipAppConfig'
+    'csp'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,5 @@ SESSION_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 31536000 #Oneyear
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True    #Apply HSTS to all subdomains
 SECURE_HSTS_PRELOAD = True         #Allow your domain to be preloaded in browser
+
+SECURE_SSL_REDIRECT = True
