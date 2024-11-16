@@ -15,7 +15,10 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.http import HttpResponse
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import user_passes_test
-from .models import Bookshelf
+from .models import Bookshelf, Book
+from .forms import ExampleForm
+
+
 
 def home(request):
     return HttpResponse("Welcome to my Book Shelf.")
@@ -134,3 +137,9 @@ def edit_Bookshelf(request):
         Bookshelf = Bookshelf.objects.add(title=title, content=content)
         return redirect('Bookshelf_details')
 
+def search_books(request):
+    form = ExampleForm(request.GET)
+    if form.is_valid():
+        query = form.cleaned_data['query']
+        books = Book.objects.filter(title__icontains=query)
+    return render(request, 'bookshelf/book_list.html', {'form': form, 'books': books})
