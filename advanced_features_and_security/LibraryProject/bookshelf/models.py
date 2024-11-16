@@ -1,15 +1,13 @@
 from django.db import models
+from django.contrib.auth.models import User, AbstractUser, BaseUserManager
+from django.conf import settings
 
 # Create your models here.
 
-class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.CharField(max_length=100)
-    publication_year = models.IntegerField()
 
-from django.db import models
-from django.contrib.auth.models import User, AbstractUser, BaseUserManager
-from django.conf import settings
+
+
+
 # Create your models here.
 class Author(models.Model):
     name = models.CharField(max_length=50)
@@ -20,6 +18,7 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=50)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='Book')
+    publication_year = models.IntegerField()
     class Meta:
         permissions = (
             ("can_add_book", "can add a book "),

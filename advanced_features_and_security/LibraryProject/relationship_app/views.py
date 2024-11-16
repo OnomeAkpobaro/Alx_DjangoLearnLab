@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from .models import Author, Book, Library, Librarian
-
+from django.shortcuts import HttpResponse
 
 # Create your views here.
+def home(request):
+    return HttpResponse("Welcome to my Book Shelf.")
 
 def list_books(request):
     """Retrieves all books renders a list of book titles and their authors."""

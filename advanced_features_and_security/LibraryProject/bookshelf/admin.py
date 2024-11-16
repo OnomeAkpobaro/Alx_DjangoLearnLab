@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Book
+from .models import Book, CustomUser
+from django.contrib.auth.admin import UserAdmin
 
 
 # Register your models here.
@@ -9,9 +10,9 @@ class BookAdmin(admin.ModelAdmin):
     search_fields = ('title', 'author')
 admin.site.register(Book, BookAdmin)
 
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser
+
+
+
 
 # Register your models here.
 class CustomUserAdmin(UserAdmin):
