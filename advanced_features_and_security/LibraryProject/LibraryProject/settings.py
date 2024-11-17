@@ -136,3 +136,5 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True    #Apply HSTS to all subdomains
 SECURE_HSTS_PRELOAD = True         #Allow your domain to be preloaded in browser
 
 SECURE_SSL_REDIRECT = True
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
