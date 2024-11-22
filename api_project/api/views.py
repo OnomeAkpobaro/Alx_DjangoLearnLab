@@ -6,6 +6,7 @@ from .models import Book
 from .serializers import BookSerializer
 from rest_framework import viewsets
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 # from django.views.decorators.csrf import csrf_exempt
 # from django.http import HttpResponse, JsonResponse
 # from rest_framework.parsers import JSONParser
@@ -17,8 +18,9 @@ class BookList(generics.ListAPIView):
     serializer_class = BookSerializer   #use the Bookserializer to serialize the queryset
 
 class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.al()        #Queryset to retrieve all books
+    queryset = Book.objects.all()        #Queryset to retrieve all books
     serializer_class =  BookSerializer  #Uses Bookserializer to serialize the data
+    permission_classes = [IsAuthenticated]  #restricts all actions to authenticated users
 # @csrf_exempt
 # def BookList(request):
 #     """
