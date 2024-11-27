@@ -21,6 +21,8 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()        #Queryset to retrieve all books
     serializer_class =  BookSerializer  #Uses Bookserializer to serialize the data
     permission_classes = [IsAuthenticated]  #restricts all actions to authenticated users
+
+    
 # @csrf_exempt
 # def BookList(request):
 #     """
