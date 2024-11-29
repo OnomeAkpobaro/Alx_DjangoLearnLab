@@ -2,7 +2,7 @@ from rest_framework import generics, permissions, filters
 from .serializers import AuthorSerializer, BookSerializer
 from .models import Book
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, BasePermission
-from django_filters.rest_framework import DjangoFilterBackend, OrderingFilter
+from django_filters import rest_framework 
 # Create your views here.
 
 #Listview - To retrieve all books
@@ -10,7 +10,7 @@ class BookListView(generics.ListAPIView):
     queryset= Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = []         #Open for everyone to read
-    filter_backends = [DjangoFilterBackend,filters.SearchFilter, OrderingFilter]
+    filter_backends = [rest_framework.DjangoFilterBackend,filters.SearchFilter, rest_framework.OrderingFilter]
     filterset_fields = ['title', 'author', 'publication_year']
     search_fields = ['title', 'author']         #Enables search on title and author
     ordering_fields = ['title', 'publication_year'] #Allow ordering by title and publication year
