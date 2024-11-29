@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from .serializers import AuthorSerializer, BookSerializer
 from .models import Book
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, BasePermission
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, BasePermission
 # Create your views here.
 
 #Listview - To retrieve all books
