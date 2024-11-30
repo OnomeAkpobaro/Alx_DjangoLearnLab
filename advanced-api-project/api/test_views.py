@@ -3,7 +3,7 @@ from api.models import Book
 from django.contrib.auth.models import User
 from rest_framework import status
 
-class ApiTestCase(TestCase):
+class APITestCase(TestCase):
     def setup(self):
         self.user = User.objects.create_user(username='testuser', password='password')
         self.book_data = {
