@@ -4,18 +4,18 @@ from django.contrib.auth.password_validation import validate_password
 from  django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 
-User = get_user_model()
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     Serializer for User registrations with additional validations
     """
-    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())])
+    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=get_user_model().objects.all())])
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField()
 
     class Meta:
-        model = User
-        fields = ['username', 'password', 'password2', 'email', 'first_name', 'last_name', 'bio', 'profile_picture']
+        model = get_user_model()
+        fields = "__all__"
 
     def validate(self, attrs):
         """
@@ -30,7 +30,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         Create a new user instance
         """
         validate_data.pop('password2')      #validate and remove 
-        user = User.objects.create_user(
+        user = get_user_model().objects.create_user(
             username=validate_data['username'],
             email=validate_data['email'],
             password=validate_data['password'],
