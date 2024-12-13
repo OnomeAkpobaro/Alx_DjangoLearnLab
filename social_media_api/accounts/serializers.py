@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from  django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -29,7 +30,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         Create a new user instance
         """
         validate_data.pop('password2')      #validate and remove 
-        user = User.objects.create_user(**validate_data)
+        user = User.objects.create_user(
+            username=validate_data['username'],
+            email=validate_data['email'],
+            password=validate_data['password'],
+            first_name=validate_data.get('first_name',''),
+            last_name=validate_data.get('last_name', '')
+        )
+
+        Token.objects.create(user=user)
         return user
     # def login(self, valid)
     
