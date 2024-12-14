@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
-
+from django.conf import settings
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password):
@@ -23,15 +23,14 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
     
-class AccountUser(AbstractUser):
+class CustomUser(AbstractUser):
     """
     Extended user model, adds additional fields for social media profile
     """
     email = models.EmailField(unique=True, max_length=255)
     bio = models.TextField(max_length=500, blank=True, null=True)
     profile_picture = models.ImageField(('profile picture'), upload_to = 'proflie_pics/', blank=True, null=True),
-    followers = models.ManyToManyField('self', symmetrical=False, related_name='is_followed_by', blank=True)
-    following = models.ManyToManyField('self', symmetrical=False, related_name='is_following', blank=True)
+ 
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
@@ -74,4 +73,7 @@ class AccountUser(AbstractUser):
         """
         return self.following.filter(id=user.id).exixts()
     
-    
+class AccountUser(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
+    followers = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False, related_name='is_followed_by', blank=True)
+    following = models.ManyToManyField(settings.AUTH_USER_MODEL, symmetrical=False, related_name='is_following', blank=True)
