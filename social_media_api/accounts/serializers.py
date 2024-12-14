@@ -31,7 +31,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """
         validate_data.pop('password2')      #validate and remove 
         user = get_user_model().objects.create_user(
-            username=validate_data['username'],
             email=validate_data['email'],
             password=validate_data['password'],
             first_name=validate_data.get('first_name',''),

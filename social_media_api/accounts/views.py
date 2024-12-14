@@ -24,6 +24,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 
 class RegisterView(APIView):
+
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -33,16 +35,19 @@ class RegisterView(APIView):
                 "user": serializer.data,
                 "token": token.key
             }, status=status.HTTP_201_CREATED)
+            print(token.key)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
 class LoginView(APIView):
     def post(self, request):
-        username = request.data.get("username")
+        email = request.data.get("email")
         password = request.data.get("password")
-        user = authenticate(username=username, password=password)
+        user = authenticate(email=email, password=password)
         if user:
-            token, created = Token.objects.get_or_create(user=user)
+            token = Token.objects.get_or_create(user=user)
             return Response({'token': token.key, 'user_id':user.pk, 'username': user.username}, status=status.HTTP_200_OK)
+            print (token.key)
         return Response({"error": "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED)
     
 class ProfileView(APIView):
