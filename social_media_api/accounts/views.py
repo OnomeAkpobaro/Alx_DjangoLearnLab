@@ -79,9 +79,9 @@ class ProfileView(generics.GenericAPIViewe):
 class FollowUserView(generics.GenericAPIView):
         permission_classes = [permissions.IsAuthenticated]
 
-        def post(self, request, user_id):
+        def post(self, request):
             try:
-                user_to_follow = AccountUser.objects.get(id=user_id)
+                user_to_follow = AccountUser.objects.get()
                 if request.Accountuser.is_following(user_to_follow):
                     return Response({"detail": "Already following this user"}, status=status.HTTP_400_BAD_REQUEST)
                 request.Accountuser.follow_user(user_to_follow)
@@ -92,9 +92,9 @@ class FollowUserView(generics.GenericAPIView):
 class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, user_id):
+    def post(self, request):
         try:
-            user_to_unfolow = AccountUser.objects.get(id=user_id)
+            user_to_unfolow = AccountUser.objects.get()
             if not request.Accountuser.is_following(user_to_unfolow):
                 return Response({"detail": "you are not following this user"}, status=status.HTTP_400_BAD_REQUEST)
             request.Accountuser.unfollow(user_to_unfolow)
