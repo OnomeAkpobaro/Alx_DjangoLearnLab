@@ -14,20 +14,20 @@
 #     queryset = User.objects.all()
 #     serializer_class = UserProfileSerializer
 #     permission_classes = [permissions.AllowAny]
-from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from .serializers import UserRegistrationSerializer, UserProfileSerializer
 from django.contrib.auth import authenticate
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from django.contrib.auth import get_user_model
+from rest_framework import permissions
+from accounts.models import AccountUser
 
 
 
-class RegisterView(APIView):
+class RegisterView(generics.GenericAPIView):
 
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]
     def post(self, request):
         serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -41,7 +41,8 @@ class RegisterView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-class LoginView(APIView):
+class LoginView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
@@ -52,11 +53,11 @@ class LoginView(APIView):
         
         return Response({"error": "Invalid Credentials"}, status=status.HTTP_401_UNAUTHORIZED)
     
-class ProfileView(APIView):
+class ProfileView(generics.GenericAPIViewe):
     """
     View to retrieve and update user profile
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         serializer = UserProfileSerializer(request.user)
@@ -74,30 +75,30 @@ class ProfileView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-User = get_user_model()
-class FollowUserView(APIView):
-        permission_classes = [IsAuthenticated]
+
+class FollowUserView(generics.GenericAPIView):
+        permission_classes = [permissions.IsAuthenticated]
 
         def post(self, request, user_id):
             try:
-                user_to_follow = User.objects.get(id=user_id)
-                if request.user.is_following(user_to_follow):
+                user_to_follow = AccountUser.objects.get(id=user_id)
+                if request.Accountuser.is_following(user_to_follow):
                     return Response({"detail": "Already following this user"}, status=status.HTTP_400_BAD_REQUEST)
-                request.user.follow_user(user_to_follow)
+                request.Accountuser.follow_user(user_to_follow)
                 return Response({"detail": f" Now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
-            except User.DoesNotExist:
+            except AccountUser.DoesNotExist:
                 return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
             
-class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+class UnfollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         try:
-            user_to_unfolow = User.objects.get(id=user_id)
-            if not request.user.is_following(user_to_unfolow):
+            user_to_unfolow = AccountUser.objects.get(id=user_id)
+            if not request.Accountuser.is_following(user_to_unfolow):
                 return Response({"detail": "you are not following this user"}, status=status.HTTP_400_BAD_REQUEST)
-            request.user.unfollow(user_to_unfolow)
+            request.Accountuser.unfollow(user_to_unfolow)
             return Response({"detail": f"you have unfollowed {user_to_unfolow.username}."}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
+        except AccountUser.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
       
