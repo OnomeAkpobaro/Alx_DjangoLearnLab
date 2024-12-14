@@ -173,7 +173,7 @@ class FollowUserView(generics.GenericAPIView):
             return Response({"detail": "User ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user_to_follow = CustomUser.objects.get(id=user_id)
+            user_to_follow = CustomUser.objects.all()
             if request.user.is_following(user_to_follow):
                 return Response({"detail": "Already following this user"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -192,7 +192,7 @@ class UnfollowUserView(generics.GenericAPIView):
             return Response({"detail": "User ID is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user_to_unfollow = CustomUser.objects.get(id=user_id)
+            user_to_unfollow = CustomUser.objects.all()
             if not request.user.is_following(user_to_unfollow):
                 return Response({"detail": "You are not following this user"}, status=status.HTTP_400_BAD_REQUEST)
 
