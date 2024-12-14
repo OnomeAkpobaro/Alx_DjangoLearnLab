@@ -4,7 +4,7 @@ from .serializers import PostSerializer, CommentSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
+from rest_framework import status, generics
 from notifications.models import Notification
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -46,8 +46,8 @@ class LikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
-        try: 
-            post = Post.objects.get(pk=pk)
+
+            post = generics.get_object_or_404(Post, pk=pk)
             like, created = Like.objects.get_or_create(user=request.user, post=post)
             if created:
                 Notification.objects.create(
@@ -57,24 +57,21 @@ class LikePostView(APIView):
                     target=post
                 )
                 return Response({"message": "Post liked"}, status=status.HTTP_201_CREATED)
+                
             else:
                 return Response({"message": "Post already liked"}, status=status.HTTP_400_BAD_REQUEST)
-        except Post.DoesNotExist:
-            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
         
 class UnlikePostView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request, pk):
-        try:
-            post = Post.objects.get(pk=pk)
+     
+            post = generics.get_object_or_404(Post, pk=pk)
             like = Like.objects.filter(user=request.user, post=post)
             if like.exists():
                 like.delete()
                 return Response({"message": "Post Unliked"}, status=status.HTTP_204_NO_CONTENT)
             else: 
                 return Response({"error": "You haven't liked this post"}, status=status.HTTP_400_BAD_REQUEST)
-        except Post.DoesNotExist:
-            return Response({"error": "Post not found"}, status=status.HTTP_404_NOT_FOUND)
         
     
