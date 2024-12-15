@@ -11,11 +11,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=get_user_model().objects.all())])
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField()
+    password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = get_user_model()
-        fields = "__all__"
+        fields = ['email', 'password', 'password2', 'first_name', 'last_name']
 
     def validate(self, attrs):
         """
@@ -25,22 +25,42 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"password": "password didn't match"})
         return attrs
     
-    def create(self, validate_data):
+    def create(self, validated_data):
         """
         Create a new user instance
         """
-        validate_data.pop('password2')      #validate and remove 
-        user = get_user_model().objects.create_user(
-            email=validate_data['email'],
-            password=validate_data['password'],
-            first_name=validate_data.get('first_name',''),
-            last_name=validate_data.get('last_name', '')
-        )
 
+        validated_data.pop('password2')      #validate and remove 
+        user = get_user_model().objects.create_user(
+            email=validated_data['email'],
+            password=validated_data['password']
+        )
+        user.first_name = validated_data.get('first_name', '')
+        user.last_name = validated_data.get('last_name', '')
+        user.save()
         Token.objects.create(user=user)
         return user
-    # def login(self, valid)
-    
+   
+class UserLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(write_only=True, required=True)
+   
+
+
+    def validate(self, attrs):
+        """
+        Validate user credentials
+        """
+        User = get_user_model()
+        try:
+            user = User.objects.get(email=attrs['email'])
+            if not user.check_password(attrs['password']):
+                raise serializers.ValidationError("Invalid Credentials")
+            attrs['user'] = user
+            return attrs
+        except User.DoesNotExist:
+            raise serializers.ValidationError("User not found")
+
 class UserProfileSerializer(serializers.ModelSerializer):
     """
     Serializer for user profile details
@@ -54,9 +74,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
     def get_followers_count(self, obj):
-        return obj.get_followers_counts()
+        return obj.get_followers_count() 
     def get_following_count(self, obj):
-        return obj.get_following_count()
+        return obj.get_following_count() 
     
 
     

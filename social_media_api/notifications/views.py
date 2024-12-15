@@ -3,8 +3,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from .models import Notification
 from rest_framework import status
+from .serializers import NotificationSerializer
 class NotificationListView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = NotificationSerializer
 
     def get(self, request):
         notifications = Notification.objects.filter(recipient=request.user).order_by('-timestamp')
@@ -19,6 +21,7 @@ class NotificationListView(APIView):
         return Response({"notifications": notifications_data, "unread_count": unread_count})
 class MarkNotificationReadView(APIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = NotificationSerializer
 
     def post(self, request, notification_id):
         try:

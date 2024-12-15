@@ -20,6 +20,7 @@ class UserManager(BaseUserManager):
         """
         user = self.create_user(email, password=password)
         user.is_admin = True
+        user.is_staff = True
         user.save(using=self._db)
         return user
     
@@ -29,7 +30,7 @@ class CustomUser(AbstractUser):
     """
     email = models.EmailField(unique=True, max_length=255)
     bio = models.TextField(max_length=500, blank=True, null=True)
-    profile_picture = models.ImageField(('profile picture'), upload_to = 'proflie_pics/', blank=True, null=True),
+    profile_picture = models.ImageField(('profile picture'), upload_to = 'proflie_pics/', blank=True, null=True)
  
 
     USERNAME_FIELD = 'email'
@@ -71,7 +72,7 @@ class CustomUser(AbstractUser):
         """
         Check if the current user is followed by another users.
         """
-        return self.following.filter(id=user.id).exixts()
+        return self.following.filter(id=user.id).exists()
     
 class AccountUser(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)

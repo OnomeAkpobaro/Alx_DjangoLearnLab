@@ -8,7 +8,10 @@ from rest_framework import status, generics
 from notifications.models import Notification
 
 class PostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all().order_by('created_at')
+    """
+    Viewset for Post model handling CRUD operations
+    """
+    queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
@@ -26,6 +29,9 @@ class PostViewSet(viewsets.ModelViewSet):
         return queryset
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """
+    Viewset for comment model handling CRUD operations
+    """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -34,6 +40,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
     
 class UserFeedView(APIView):
+    """
+    View to retrieve posts from followed users
+    """
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -43,13 +52,23 @@ class UserFeedView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LikePostView(APIView):
+    """
+    View to handle liking a post
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, pk):
 
             post = generics.get_object_or_404(Post, pk=pk)
-            like, created = Like.objects.get_or_create(user=request.user, post=post)
-            if created:
+
+            #check if user has already liked the post
+            existing_like = Like.objects.filter(user=request.user, post=post)
+
+            if existing_like.exists():
+                return Response({"message": "Post already liked"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            like = Like.objects.get_or_create(user=request.user, post=post)
+            if post.author != request.user:
                 Notification.objects.create(
                     recipient=post.author,
                     actor=request.user,
@@ -58,20 +77,23 @@ class LikePostView(APIView):
                 )
                 return Response({"message": "Post liked"}, status=status.HTTP_201_CREATED)
                 
-            else:
-                return Response({"message": "Post already liked"}, status=status.HTTP_400_BAD_REQUEST)
+           
         
 class UnlikePostView(APIView):
+    """
+    View to handle unliking a post
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def delete(self, request, pk):
      
             post = generics.get_object_or_404(Post, pk=pk)
             like = Like.objects.filter(user=request.user, post=post)
-            if like.exists():
-                like.delete()
-                return Response({"message": "Post Unliked"}, status=status.HTTP_204_NO_CONTENT)
-            else: 
+            if not like.exists():
                 return Response({"error": "You haven't liked this post"}, status=status.HTTP_400_BAD_REQUEST)
+            like.delete()
+            return Response({"message": "Post Unliked"}, status=status.HTTP_204_NO_CONTENT)
+           
+                
         
     
