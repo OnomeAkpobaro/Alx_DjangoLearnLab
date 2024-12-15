@@ -1,0 +1,21 @@
+altgraph @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot7/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-133.100.1.1/altgraph-0.17.2-py2.py3-none-any.whl
+asgiref==3.8.1
+dj-database-url==2.3.0
+Django==4.2.16
+django-filter==24.3
+django-taggit==6.1.0
+django_csp==3.8
+djangorestframework==3.15.2
+djangorestframework-simplejwt==5.3.1
+future @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot7/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-133.100.1.1/future-0.18.2-py3-none-any.whl
+gunicorn==23.0.0
+macholib @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot7/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-133.100.1.1/macholib-1.15.2-py2.py3-none-any.whl
+mysql-connector-python==9.1.0
+packaging==24.2
+pillow==11.0.0
+psycopg2-binary==2.9.10
+PyJWT==2.10.1
+six @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot7/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-133.100.1.1/six-1.15.0-py2.py3-none-any.whl
+sqlparse==0.5.1
+typing_extensions==4.12.2
+whitenoise==6.8.2
